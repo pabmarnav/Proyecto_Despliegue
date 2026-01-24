@@ -1,6 +1,6 @@
 FROM debian:latest
 
-LABEL maintainer="tu_email@ejemplo.com"
+LABEL maintainer="pabmarnav6@alu.edu.gva.es"
 
 RUN apt-get update && apt-get install -y \
     apache2 \
