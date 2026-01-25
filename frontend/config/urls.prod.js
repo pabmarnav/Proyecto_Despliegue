@@ -1,1 +1,1 @@
-const backendUrl = "http://pablom-backend.mooo.com";
+const backendUrl = "__BACKEND_URL__";
