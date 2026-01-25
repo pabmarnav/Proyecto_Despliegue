@@ -1,0 +1,11 @@
+services:
+  web:
+    build: .
+    container_name: frontend-web-prod
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./app/public_html:/var/www/html
+      - ./conf/vhosts/production.conf:/etc/apache2/sites-enabled/000-default.conf
+      - ./config/urls.prod.js:/var/www/html/config/urls.js

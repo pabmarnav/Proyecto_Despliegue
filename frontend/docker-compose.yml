@@ -1,0 +1,10 @@
+services:
+  web:
+    build: .
+    container_name: frontend-web
+    ports:
+      - "80:80"
+    volumes:
+      - ./app/public_html:/var/www/html
+      - ./conf/vhosts/development.conf:/etc/apache2/sites-enabled/000-default.conf
+      - ./config/urls.dev.js:/var/www/html/config/urls.js

@@ -1,0 +1,5 @@
+.env
+dbconfiguration.yml
+vendor/
+node_modules/
+*.log

@@ -1,0 +1,24 @@
+services:
+  db:
+    image: mysql:8.0.35-debian
+    container_name: backend-db-prod
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - prod_db_data:/var/lib/mysql
+
+  web:
+    build: .
+    container_name: backend-web-prod
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./app:/var/www/html
+      - ./conf/vhosts/production.conf:/etc/apache2/sites-enabled/000-default.conf
+    depends_on:
+      - db
+
+volumes:
+  prod_db_data:

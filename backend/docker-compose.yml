@@ -1,0 +1,26 @@
+services:
+  db:
+    image: mysql:8.0.35-debian
+    container_name: backend-db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: films
+      MYSQL_USER: devuser
+      MYSQL_PASSWORD: devpassword
+    volumes:
+      - output_db_data:/var/lib/mysql
+      - ./dump.sql:/docker-entrypoint-initdb.d/init.sql
+
+  web:
+    build: .
+    container_name: backend-web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./app:/var/www/html
+      - ./conf/vhosts/development.conf:/etc/apache2/sites-enabled/000-default.conf
+    depends_on:
+      - db
+
+volumes:
+  output_db_data:
