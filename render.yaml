@@ -1,0 +1,54 @@
+services:
+  # Base de datos MySQL (Efímera)
+  - type: pserv
+    name: mysqldb
+    runtime: image
+    image: mysql:8.0.35-debian
+    envVars:
+      - key: MYSQL_ROOT_PASSWORD
+        generateValue: true
+      - key: MYSQL_DATABASE
+        value: films
+      - key: MYSQL_USER
+        value: produser
+      - key: MYSQL_PASSWORD
+        generateValue: true
+
+  # Backend (Apache + PHP)
+  - type: web
+    name: backend-service
+    runtime: docker
+    repo: https://github.com/pabmarnav/Proyecto_Despliegue
+    rootScope: backend
+    envVars:
+      - key: MYSQL_HOST
+        fromService:
+          type: pserv
+          name: mysqldb
+          property: host
+      - key: MYSQL_DATABASE
+        value: films
+      - key: MYSQL_USER
+        value: produser
+      - key: MYSQL_PASSWORD
+        fromService:
+          type: pserv
+          name: mysqldb
+          envVarKey: MYSQL_PASSWORD
+      - key: MYSQL_ROOT_PASSWORD
+        fromService:
+          type: pserv
+          name: mysqldb
+          envVarKey: MYSQL_ROOT_PASSWORD
+
+  # Frontend (Apache + HTML/JS)
+  - type: web
+    name: frontend-service
+    runtime: docker
+    rootScope: frontend
+    envVars:
+      - key: BACKEND_URL
+        fromService:
+          type: web
+          name: backend-service
+          property: url
