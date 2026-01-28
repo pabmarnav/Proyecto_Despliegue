@@ -7,4 +7,4 @@ COPY conf/vhosts/production.conf /etc/apache2/sites-enabled/000-default.conf
 COPY app /var/www/html
 RUN chown -R www-data:www-data /var/www/html && echo "DEPLOYMENT SUCCESS" > /var/www/html/status.txt
 EXPOSE 80
-CMD ["/bin/bash", "-c", "rm -f /var/www/html/index.html && apachectl -D FOREGROUND"]
+CMD ["apachectl", "-D", "FOREGROUND"]
