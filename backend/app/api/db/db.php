@@ -1,12 +1,36 @@
 <?php
 
 //Guardo los datos de conexión de la base de datos en un fichero YML
-function getDBConfig() {
-    $dbFileConfig=dirname(__FILE__)."/../../dbconfiguration.yml";
+function getDBConfig()
+{
+    // Prioridad 1: Variables de Entorno (Producción / Docker)
+    $envUser = getenv('MYSQL_USER');
+    if ($envUser) {
+        // En docker-compose.prod.yml pasaremos estas variables
+        $dbName = getenv('MYSQL_DATABASE') ?: 'films';
+        $dbHost = getenv('MYSQL_HOST') ?: 'backend-db-prod'; // Nombre del contenedor en prod
+        $dbPass = getenv('MYSQL_PASSWORD');
 
-    $configYML = yaml_parse_file($dbFileConfig);//necesita la extensión php-yaml
+        $cad = sprintf("mysql:dbname=%s;host=%s;charset=UTF8", $dbName, $dbHost);
 
-	$cad = sprintf("mysql:dbname=%s;host=%s;charset=UTF8", $configYML["dbname"], $configYML["ip"]);
+        return array(
+            "cad" => $cad,
+            "user" => $envUser,
+            "pass" => $dbPass
+        );
+    }
+
+    // Prioridad 2: Archivo YAML (Desarrollo local)
+    $dbFileConfig = dirname(__FILE__) . "/../../dbconfiguration.yml";
+
+    // Si no existen variables de entorno ni archivo, fallará controladamente
+    if (!file_exists($dbFileConfig)) {
+        return null;
+    }
+
+    $configYML = yaml_parse_file($dbFileConfig);
+
+    $cad = sprintf("mysql:dbname=%s;host=%s;charset=UTF8", $configYML["dbname"], $configYML["ip"]);
 
     $result = array(
         "cad" => $cad,
@@ -14,28 +38,30 @@ function getDBConfig() {
         "pass" => $configYML["pass"]
     );
 
-	return $result;
+    return $result;
 }
 
-function getDBConnection() {
+function getDBConnection()
+{
     try {
         $res = getDBConfig();
 
         $bd = new PDO($res["cad"], $res["user"], $res["pass"]);
 
         return $bd;
-    } catch(PDOException $e) {
+    } catch (PDOException $e) {
         return null;
     }
 }
 
 /* ------------ LOGIN --------------- */
-function checkLogin($email, $password) {
+function checkLogin($email, $password)
+{
     try {
-    	$bd = getDBConnection();
+        $bd = getDBConnection();
 
-        if(!is_null($bd)) {
-            $sqlPrepared = $bd->prepare("SELECT email from user WHERE email = :email AND password = :password " );
+        if (!is_null($bd)) {
+            $sqlPrepared = $bd->prepare("SELECT email from user WHERE email = :email AND password = :password ");
             $params = array(
                 ':email' => $email,
                 ':password' => $password
@@ -43,21 +69,22 @@ function checkLogin($email, $password) {
             $sqlPrepared->execute($params);
 
             return $sqlPrepared->rowCount() > 0 ? true : false;
-         } else
+        } else
             return $bd;
 
     } catch (PDOException $e) {
-       return null;
+        return null;
     }
 }
 
 
 /* ------------ PELÍCULAS  --------------- */
-function getFilmsDB() {
+function getFilmsDB()
+{
     try {
-    	$bd = getDBConnection();
+        $bd = getDBConnection();
 
-        if(!is_null($bd)) {
+        if (!is_null($bd)) {
             $sqlPrepared = $bd->prepare("SELECT id,name, director, classification from film");
             $sqlPrepared->execute();
 
@@ -66,15 +93,16 @@ function getFilmsDB() {
             return $bd;
 
     } catch (PDOException $e) {
-       return null;
+        return null;
     }
 }
 
-function getFilmDB($id) {
+function getFilmDB($id)
+{
     try {
-    	$bd = getDBConnection();
+        $bd = getDBConnection();
 
-        if(!is_null($bd)) {
+        if (!is_null($bd)) {
             $sqlPrepared = $bd->prepare("SELECT * from film WHERE id = :id");
             $params = array(
                 ':id' => $id,
@@ -86,15 +114,16 @@ function getFilmDB($id) {
             return $bd;
 
     } catch (PDOException $e) {
-       return null;
+        return null;
     }
 }
 
-function addFilmDB($data) {
+function addFilmDB($data)
+{
     try {
-    	$bd = getDBConnection();
+        $bd = getDBConnection();
 
-        if(!is_null($bd)) {
+        if (!is_null($bd)) {
 
             $sqlPrepared = $bd->prepare("
                 INSERT INTO film (name,director,classification,img,plot)
@@ -117,16 +146,17 @@ function addFilmDB($data) {
             return $bd;
 
     } catch (PDOException $e) {
-       return null;
+        return null;
     }
 }
 
 
-function updateFilmDB($data) {
+function updateFilmDB($data)
+{
     try {
-    	$bd = getDBConnection();
+        $bd = getDBConnection();
 
-        if(!is_null($bd)) {
+        if (!is_null($bd)) {
 
             $sqlPrepared = $bd->prepare("
                 UPDATE film
@@ -151,15 +181,16 @@ function updateFilmDB($data) {
             return $bd;
 
     } catch (PDOException $e) {
-       return null;
+        return null;
     }
 }
 
-function deleteFilmDB($id) {
+function deleteFilmDB($id)
+{
     try {
-    	$bd = getDBConnection();
+        $bd = getDBConnection();
 
-        if(!is_null($bd)) {
+        if (!is_null($bd)) {
 
             $sqlPrepared = $bd->prepare("
                 DELETE FROM film
@@ -178,6 +209,6 @@ function deleteFilmDB($id) {
             return $bd;
 
     } catch (PDOException $e) {
-       return null;
+        return null;
     }
 }
