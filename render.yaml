@@ -19,6 +19,8 @@ services:
     name: backend-service
     runtime: docker
     repo: https://github.com/pabmarnav/Proyecto_Despliegue
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
     rootScope: backend
     envVars:
       - key: MYSQL_HOST
@@ -45,6 +47,9 @@ services:
   - type: web
     name: frontend-service
     runtime: docker
+    repo: https://github.com/pabmarnav/Proyecto_Despliegue
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
     rootScope: frontend
     envVars:
       - key: BACKEND_URL

@@ -1,1 +1,1 @@
-const backendUrl = "__BACKEND_URL__";
+const apiUrl = "__BACKEND_URL__";

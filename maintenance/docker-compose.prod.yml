@@ -1,0 +1,9 @@
+services:
+  web:
+    build: .
+    container_name: maintenance-web-prod
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./app:/var/www/html

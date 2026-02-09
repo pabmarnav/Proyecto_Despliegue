@@ -8,4 +8,4 @@ COPY app/public_html /var/www/html
 COPY config/urls.prod.js /var/www/html/config/urls.js
 RUN chown -R www-data:www-data /var/www/html && echo "DEPLOYMENT SUCCESS" > /var/www/html/status.txt
 EXPOSE 80
-CMD ["/bin/bash", "-c", "rm -f /var/www/html/index.html && sed -i \"s|__BACKEND_URL__|$BACKEND_URL|g\" /var/www/html/config/urls.js && apachectl -D FOREGROUND"]
+CMD ["/bin/bash", "-c", "rm -f /var/www/html/index.html && sed \"s|__BACKEND_URL__|$BACKEND_URL|g\" /var/www/html/config/urls.js > /tmp/urls.js && cat /tmp/urls.js > /var/www/html/config/urls.js && apachectl -D FOREGROUND"]
