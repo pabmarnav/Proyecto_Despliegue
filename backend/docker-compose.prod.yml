@@ -25,5 +25,14 @@ services:
     depends_on:
       - db
 
+  frontend:
+    build: ../frontend
+    container_name: frontend-web-prod
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      - BACKEND_URL=__BACKEND_URL__
+
 volumes:
   prod_db_data:
