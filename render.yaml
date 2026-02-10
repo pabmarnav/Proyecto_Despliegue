@@ -1,24 +1,4 @@
 services:
-  # Base de datos MySQL (Efímera)
-  - type: pserv
-    name: mysqldb
-    runtime: docker
-    dockerfilePath: ./database/Dockerfile
-    dockerContext: ./database
-    disk:
-      name: mysql-data
-      mountPath: /var/lib/mysql
-      sizeGB: 1
-    envVars:
-      - key: MYSQL_ROOT_PASSWORD
-        generateValue: true
-      - key: MYSQL_DATABASE
-        value: films
-      - key: MYSQL_USER
-        value: produser
-      - key: MYSQL_PASSWORD
-        generateValue: true
-
   # Backend (Apache + PHP)
   - type: web
     name: backend-service
@@ -29,24 +9,15 @@ services:
     rootScope: backend
     envVars:
       - key: MYSQL_HOST
-        fromService:
-          type: pserv
-          name: mysqldb
-          property: host
+        value: 34.197.49.83
       - key: MYSQL_DATABASE
         value: films
       - key: MYSQL_USER
         value: produser
       - key: MYSQL_PASSWORD
-        fromService:
-          type: pserv
-          name: mysqldb
-          envVarKey: MYSQL_PASSWORD
+        value: prodpassword
       - key: MYSQL_ROOT_PASSWORD
-        fromService:
-          type: pserv
-          name: mysqldb
-          envVarKey: MYSQL_ROOT_PASSWORD
+        value: prodrootpassword
 
   # Frontend (Apache + HTML/JS)
   - type: web
