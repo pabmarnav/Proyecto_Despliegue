@@ -7,6 +7,7 @@ services:
       - .env
     volumes:
       - prod_db_data:/var/lib/mysql
+      - ./dump.sql:/docker-entrypoint-initdb.d/init.sql
 
   web:
     build: .
