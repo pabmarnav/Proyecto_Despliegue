@@ -1,1 +1,1 @@
-const apiUrl = "http://pablom-backend.mooo.com";
+const apiUrl = "http://" + window.location.hostname + ":8080";
