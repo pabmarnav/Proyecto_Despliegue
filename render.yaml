@@ -2,8 +2,9 @@ services:
   # Base de datos MySQL (Efímera)
   - type: pserv
     name: mysqldb
-    runtime: image
-    image: mysql:8.0.35-debian
+    runtime: docker
+    dockerfilePath: ./database/Dockerfile
+    dockerContext: ./database
     envVars:
       - key: MYSQL_ROOT_PASSWORD
         generateValue: true
