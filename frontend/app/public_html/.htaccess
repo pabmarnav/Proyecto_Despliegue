@@ -8,3 +8,6 @@ RewriteRule ^(.*)$ http://videoclub-pablom.chickenkiller.com/$1 [L,R=301]
 
 # Pagina de error personalizada
 ErrorDocument 404 /404.html
+
+# MANTENIMIENTO (Descomentar para activar)
+# RewriteRule ^(.*)$ http://antenimientoweb-env.eba-kp4kndhz.us-east-1.elasticbeanstalk.com/ [R=302,L]
