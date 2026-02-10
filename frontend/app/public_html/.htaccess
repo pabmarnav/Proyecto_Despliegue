@@ -1,0 +1,10 @@
+Options -Indexes
+
+RewriteEngine On
+
+# Redireccion de dominio secundario a principal
+RewriteCond %{HTTP_HOST} mooo.com [NC]
+RewriteRule ^(.*)$ http://videoclub-pablom.chickenkiller.com/$1 [L,R=301]
+
+# Pagina de error personalizada
+ErrorDocument 404 /404.html
